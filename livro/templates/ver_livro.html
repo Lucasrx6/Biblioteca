@@ -1,5 +1,82 @@
 {% extends 'base.html' %}
 
 {% block 'conteudo' %}
+        <div class="container">
+            <h1>Livro</h1>
+            <br>
+            <form action="#" method="POST">{% csrf_token %}
+                    <p>
+                    <label>Nome do Livro:</label> <br>
+                    <input style="width: 40%;" class="fom-control" type="text" value="{{livro.nome}}">
+                    </p>
 
+                    <p>
+                    <label>Autor:</label> <br>
+                    <input style="width: 40%;" class="fom-control" type="text" value="{{livro.autor}}">
+                    </p>
+
+                    <p>
+                    <label>Data de Cadastro:</label><br>
+                    <input style="width: 40%;" class="fom-control" type="text" value="{{livro.data_cadastro}}">
+                    </p>
+
+                     <p>
+                    <label>Categoria:</label>
+                    <select class="form_control" name="categoria">
+                        {% for i in categoria_livro %}
+                            {% if livro.categoria == i %}
+                                <option selected>{{i}}</option>
+                             {% endif %}
+                            <option>{{i}}</option>
+                        {% endfor %}
+
+                    </select>
+                    </p>
+
+                    <label>Emprestado: &nbsp;</label>
+                        {% if livro.emprestado %}
+                            <input style="transform: scale(1.3)" checked type="checkbox" name="emprestado">
+                        {% else %}
+                            <input style="transform: scale(1.3)" type="checkbox" name="emprestado">
+                        {% endif %}</form>
+
+                </div>
+                    <div class="container">
+                        <input type="submit" class="btn btn-success btn-lg" value="Salvar">
+                        <a href="{% url 'home' %}" class="btn btn-primary btn-lg">Voltar</a>
+                    </div>
+             </form>
+
+
+        <hr>
+
+        <div class="container">
+            <h3>Histórico de Emprestimos</h3>
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th scope="col">Nome</th>
+                      <th scope="col">Data do Emprestimo</th>
+                      <th scope="col">Data de Devolução</th>
+                      <th scope="col">Tempo</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% for i in emprestimos %}
+                    <tr>
+                        {% if nome_emprestado_anonimo == None %}
+                            <th scope="row">{{i.nome_emprestado}}</th>
+                        {% else %}
+                            <th scope="row">{{i.nome_emprestado_anonimo}}</th>
+                        {% endif %}
+                      <td>{{i.data_emprestimo}}</td>
+                      <td>{{i.data_devolucao}}</td>
+                      <td>{{i.tempo_duracao}}</td>
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+        </div>
+<br>
+<hr>
 {% endblock %}
