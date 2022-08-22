@@ -64,3 +64,6 @@ def valida_login(request):
 def sair(request):
     request.session.flush()
     return redirect('/auth/login')
+
+def admin(request):
+    return redirect('/admin')

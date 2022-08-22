@@ -13,9 +13,15 @@
   <body>
 
  <nav class="navbar navbar-dark bg-dark">
-  <a class="navbar-brand" href="{% url 'home' %}">BIBLIOTECA</a>
-     <a href="{% url 'sair' %}" class="btn btn-outline-danger my-2 my-sm-0" type="submit">Sair</a>
-</nav>
+    <a class="navbar-brand mr-auto" href="{% url 'home' %}">BIBLIOTECA</a>
+    <a class="navbar-brand ml-auto" href="{% url 'admin' %}">Admin</a>
+     {% if usuario_logado %}
+         <a href="{% url 'sair' %}" class="btn btn-outline-danger" type="submit">Sair</a>
+     {% endif %}
+ </nav>
+ <br>
+
+
 
 
     {% block 'conteudo' %} {% endblock %}
