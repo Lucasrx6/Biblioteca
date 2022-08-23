@@ -2,40 +2,90 @@
 
 
 {% block 'conteudo' %}
-       <div class="text-right">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-              Cadastrar Livro
-            </button>
+            <div class="container">
+               <div class="text-right">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                      Cadastrar novo Livro
+                    </button>
+                   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal2">
+                      Cadastrar nova Categoria
+                    </button>
+               </div>
+           </div>
 
-            <!-- Modal -->
+            <!-- Livro-->
             <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
               <div class="modal-dialog" role="document">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Cadastro de livro</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Novo Livro</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
 
                       <div class="modal-body">
-                        <form action="{% url 'cadastrar_livro' %}" method="POST"> {% csrf_token %}
-                           <table>
-                                {{form.as_table}}
-                           </table>
-                            <input type="submit" class="btn btn-success" value="Cadastrar">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                         </form>
+                          <div id="livros">
+                            <form action="{% url 'cadastrar_livro' %}" method="POST"> {% csrf_token %}
+                               <table>
+                                    {{form.as_table}}
+                               </table>
+                                <input type="submit" class="btn btn-success" value="Cadastrar">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                             </form>
+                          </div>
+
+
                       </div>
 
 
                 </div>
               </div>
             </div>
-        </div>
+
+
+            <!-- Categoria -->
+            <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel2">Nova Categoria</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                      <div class="modal-body">
+                          <div id="categoria">
+                            <form action="{% url 'cadastrar_categoria' %}" method="POST"> {% csrf_token %}
+                               <table>
+                                    {{form_categoria}}
+                               </table>
+                                <input type="hidden" name="usuario" value="{{usuario_logado}}">
+                                <input type="submit" class="btn btn-success" value="Cadastrar">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                             </form>
+                          </div>
+                      </div>
+                </div>
+              </div>
+            </div>
+
     <hr>
 <div class="container">
-<h1>Livros</h1>
+
+    {% if status_categoria == '1' %}
+        <div class="alert alert-success" role="alert">
+        Categoria cadastrada com Sucesso!!
+        </div>
+    {% endif %}
+
+        {% if status_livro == '1' %}
+        <div class="alert alert-success" role="alert">
+        Livro cadastrado com Sucesso!!
+        </div>
+    {% endif %}
+
+<h1>Biblioteca</h1>
     <div class="row">
         {% for livro in livros %}
             <div class="col-4">
@@ -43,9 +93,9 @@
                     <img class="card-img-top" src="..." alt="Card image cap">
                     <div class="card-body">
                         <h5 class="card-title">{{livro.nome}}</h5>
-                        <h7 class="card-title">Categoria: {{livro.categoria}}</h7>
+                        <h6 class="card-title">Categoria: {{livro.categoria}}</h6>
                         <h6 class="card-title">Autor: {{livro.autor}}</h6>
-                        <h7 class="card-title">Data de Cadastro: {{livro.data_cadastro}}</h7>
+                        <h6 class="card-title">Data de Cadastro: {{livro.data_cadastro}}</h6>
                         <p class="card-text">Descrição: </p>
                         {% if livro.emprestado %}
                             Emprestado:
@@ -64,7 +114,9 @@
                     </div>
                 </div>
             </div>
+
         {% endfor %}
     </div>
 </div>
+
 {% endblock %}
