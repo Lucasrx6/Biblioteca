@@ -30,15 +30,19 @@ def home(request):
 
 def ver_livros(request, id):
     if request.session.get('usuario'):
-        livros = Livros.objects.get(id = id)
-        if request.session.get('usuario') == livros.usuario.id:
+        livro = Livros.objects.get(id = id)
+        if request.session.get('usuario') == livro.usuario.id:
+            usuarios = Usuario.objects.all()
             categoria_livro = Categoria.objects.filter(usuario_id = request.session.get('usuario'))
-            emprestimos = Emprestimos.objects.filter(livro = livros)
-            return render(request,'ver_livro.html', {'livro': livros,
+            emprestimos = Emprestimos.objects.filter(livro = livro)
+            livros = Livros.objects.filter(usuario_id = request.session.get('usuario'))
+            return render(request,'ver_livro.html', {'livro': livro,
                                                      'categoria_livro': categoria_livro,
                                                      'emprestimos':emprestimos,
                                                      'usuario_logado': request.session.get('usuario'),
-                                                     'id_livro': id})
+                                                     'id_livro': id,
+                                                     'usuarios': usuarios,
+                                                     'livros': livros})
         else:
             return HttpResponse('Esse livro não é seu')
     return redirect('auth/login/?status=2')
@@ -70,3 +74,21 @@ def cadastrar_categoria(request):
             return redirect('/livro/home/?cadastro_categoria=1')
         else:
             return HttpResponse('Erro')
+
+
+def cadastrar_emprestimo(request):
+    if request.method == 'POST':
+        nome_emprestado = request.POST.get('nome_emprestado')
+        nome_emprestado_anonimo = request.POST.get('nome_emprestado_anonimo')
+        livro_emprestado = request.POST.get('livro_emprestado')
+
+        if nome_emprestado_anonimo:
+            emprestimo = Emprestimos(nome_emprestado_anonimo=nome_emprestado_anonimo,
+                                     livro_id=livro_emprestado)
+
+        else:
+            emprestimo = Emprestimos(nome_emprestado_id=nome_emprestado,
+                                     livro_id=livro_emprestado)
+        emprestimo.save()
+
+        return redirect('/livro/home/?cadastro_categoria=1')
