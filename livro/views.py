@@ -17,6 +17,8 @@ def home(request):
         form.fields['usuario'].initial = request.session['usuario']
         form.fields['categoria'].queryset = Categoria.objects.filter(usuario = usuario)
         form_categoria = Cadastro_categoria()
+        usuarios = Usuario.objects.all()
+        livros_emprestar = Livros.objects.filter(usuario = usuario).filter(emprestado = False)
 
         return render(request, 'home.html', {'livros': livros,
                                              'usuario_logado': request.session.get('usuario'),
@@ -24,7 +26,9 @@ def home(request):
                                              'id_livro': id,
                                              'form_categoria': form_categoria,
                                              'status_categoria': status_categoria,
-                                             'status_livro': status_livro})
+                                             'status_livro': status_livro,
+                                             'usuarios': usuarios,
+                                             'livros_emprestar': livros_emprestar})
     else:
         return redirect('/auth/login/?status=2')
 
@@ -90,5 +94,6 @@ def cadastrar_emprestimo(request):
             emprestimo = Emprestimos(nome_emprestado_id=nome_emprestado,
                                      livro_id=livro_emprestado)
         emprestimo.save()
+
 
         return redirect('/livro/home/?cadastro_categoria=1')
